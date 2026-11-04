@@ -19,7 +19,7 @@ class Book(TimestampMixin, db.Model):
     price: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     published_year: Mapped[int | None]
     author_id: Mapped[int] = mapped_column(ForeignKey("authors.id"), index=True)
-    genre: Mapped[str] = mapped_column(String(50))
+    genre: Mapped[str] = mapped_column(String(50), nullable=True)
 
     author: Mapped[Author] = relationship(back_populates="books")
 

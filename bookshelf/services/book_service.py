@@ -4,20 +4,20 @@ from ..errors import BusinessRuleError, ConflictError, NotFoundError
 from ..extensions import db
 from ..models import Book
 from sqlalchemy.orm import Session
-from repositories.author_repository import AuthorRepository
-from repositories.book_repository import BookRepository
+from ..repositories.author_repository import AuthorRepository
+from ..repositories.book_repository import BookRepository
 
 class BookService:
 
-    def __int__(
+    def __init__(
         self,
-        session: Session,
-        booksRepository: BookRepository | None,
-        authorsRepository: AuthorRepository | None
+        session: Session | None = None,
+        booksRepository: BookRepository | None = None,
+        authorsRepository: AuthorRepository | None = None
     ) -> None:
-        self.session = session
-        self.booksRepository = booksRepository
-        self.authorsRepository = authorsRepository
+        self.session = session or db.session
+        self.booksRepository = booksRepository or BookRepository(self.session)
+        self.authorsRepository = authorsRepository or AuthorRepository(self.session)
 
 
     def get(self, book_id: int) -> Book:
@@ -77,3 +77,6 @@ class BookService:
 
         self.session.commit()
         return book
+
+    def query_by_price_range(self, min_range: Decimal, max_range: Decimal):
+        return self.booksRepository.query_by_price_range(min_range, max_range)

@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from sqlalchemy import select
 
 from .base import BaseRepository
@@ -11,4 +13,14 @@ class BookRepository(BaseRepository[Book]):
 
     def find_by_author(self, author_id: int) -> list[Book]:
         stmt = select(Book).where(Book.author_id == author_id).order_by(Book.title)
+        return self.session.scalars(stmt)
+
+    def query_by_price_range(self, min_range: Decimal, max_range: Decimal):
+        stmt = select(Book).order_by(Book.price)
+        if min_range: 
+            stmt = stmt.where(Book.price > min_range)
+
+        if max_range: 
+            stmt = stmt.where(Book.price < max_range)
+
         return self.session.scalars(stmt)

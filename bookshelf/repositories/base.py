@@ -5,7 +5,7 @@ from ..extensions import db
 class BaseRepository[T]: 
     model: type[T]
 
-    def __int__(self, session: Session | None = None) -> None:
+    def __init__(self, session: Session | None = None) -> None:
         self.session = session or db.session
 
     def get(self, entity_id: int) -> T | None:

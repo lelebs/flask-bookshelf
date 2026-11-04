@@ -2,6 +2,7 @@ from .base import BaseRepository
 from ..models import Author
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
+
 class AuthorRepository(BaseRepository[Author]):
     model = Author
 
