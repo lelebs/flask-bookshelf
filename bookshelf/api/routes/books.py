@@ -1,21 +1,15 @@
-from flask import Blueprint, jsonify, request, url_for
+from fastapi import APIRouter
 
-from ..models.price_range import PriceRange
+from ...models.price_range import PriceRange
 
-from ..services.book_service import BookService
-from ..schemas.book import BookOut, BookCreate, BookUpdate, DiscountIn
+from ...services.book_service import BookService
+from ...schemas.book import BookOut, BookCreate, BookUpdate, DiscountIn
 
 
-books_bp = Blueprint("books", __name__, url_prefix="/api/v1/books")
+router = APIRouter(tags=["books"], prefix="/api/v1/books")
 
-def _out(book) -> dict:
-    return BookOut.model_validate(book).model_dump(mode="json")
-
-def _body() -> dict:
-    return request.get_json(silent=True) or {}
-
-@books_bp.get("")
-def list_books():
+@router.get("", response_model=BookPage)
+async def list_books():
     page = request.args.get("page", 1, type=int)
     size = request.args.get("size", 10, type=int)
     items, total = BookService().list_page(page, size)

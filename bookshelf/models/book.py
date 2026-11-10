@@ -3,13 +3,13 @@ from decimal import Decimal
 from typing import TYPE_CHECKING
 from sqlalchemy import CheckConstraint, ForeignKey, Numeric, String
 from .base import TimestampMixin
-from ..extensions import db
+from ..core.database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from .author import Author
 
-class Book(TimestampMixin, db.Model): 
+class Book(TimestampMixin, Base): 
     __table_name__= "books"
     __table_args__ = (CheckConstraint("price >= 0", name="ck_books_price_positive"),)
 

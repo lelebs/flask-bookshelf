@@ -3,13 +3,13 @@ from typing import TYPE_CHECKING
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from ..extensions import db
+from ..core.database import Base
 from .base import TimestampMixin
 
 if TYPE_CHECKING:
     from .book import Book 
 
-class Author(TimestampMixin, db.Model):
+class Author(TimestampMixin, Base):
     __tablename__ = "authors"
 
     id: Mapped[int] = mapped_column(primary_key=True)
